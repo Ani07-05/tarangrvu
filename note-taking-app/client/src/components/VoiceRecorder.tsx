@@ -1,6 +1,9 @@
+// note-taking-app/client/src/components/VoiceRecorder.tsx
+// src/components/VoiceRecorder.tsx
 import React, { useState } from "react";
 import { useReactMediaRecorder } from "react-media-recorder";
-import { Button, Box, Typography } from "@mui/material";
+import { Button, Box, Typography, CircularProgress } from "@mui/material";
+import { Mic, Stop } from '@mui/icons-material';
 
 interface VoiceRecorderProps {
   onTranscriptionComplete: (transcription: string) => void;
@@ -8,6 +11,7 @@ interface VoiceRecorderProps {
 
 const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onTranscriptionComplete }) => {
   const [isProcessing, setIsProcessing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const { status, startRecording, stopRecording } = useReactMediaRecorder({
     audio: true,
@@ -20,6 +24,7 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onTranscriptionComplete }
       });
 
       setIsProcessing(true);
+      setError(null);
       const formData = new FormData();
       formData.append("audio", audioFile);
 
@@ -32,8 +37,8 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onTranscriptionComplete }
         });
 
         if (!response.ok) {
-          const errorText = await response.text();
-          throw new Error(`Server error: ${errorText}`);
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to transcribe audio');
         }
 
         const data = await response.json();
@@ -46,26 +51,50 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onTranscriptionComplete }
         }
       } catch (error) {
         console.error("❌ Transcription error:", error);
-        alert("Error transcribing audio. Please try again.");
+        setError(error instanceof Error ? error.message : 'Error transcribing audio');
       } finally {
         setIsProcessing(false);
       }
     },
   });
 
+  const isRecording = status === "recording";
+  const buttonDisabled = isProcessing;
+
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, alignItems: 'center' }}>
+    <Box sx={{ 
+      display: 'flex', 
+      flexDirection: 'column', 
+      gap: 2, 
+      alignItems: 'center',
+      padding: 2 
+    }}>
       <Button 
         variant="contained"
-        onClick={status === "recording" ? stopRecording : startRecording}
-        disabled={isProcessing}
+        onClick={isRecording ? stopRecording : startRecording}
+        disabled={buttonDisabled}
+        startIcon={isRecording ? <Stop /> : <Mic />}
+        color={isRecording ? "error" : "primary"}
+        sx={{ minWidth: 200 }}
       >
-        {status === "recording" ? "Stop Recording" : "Start Recording"}
+        {isRecording ? "Stop Recording" : "Start Recording"}
       </Button>
       
-      <Typography>
-        Status: {isProcessing ? "Processing..." : status === "recording" ? "Recording..." : "Ready"}
-      </Typography>
+      <Box sx={{ 
+        display: 'flex', 
+        alignItems: 'center', 
+        gap: 1,
+        minHeight: '24px' 
+      }}>
+        {isProcessing && <CircularProgress size={20} />}
+        <Typography color={error ? "error" : "text.secondary"}>
+          {error ? error : isProcessing 
+            ? "Processing..." 
+            : isRecording 
+              ? "Recording in progress..." 
+              : "Ready to record"}
+        </Typography>
+      </Box>
     </Box>
   );
 };
