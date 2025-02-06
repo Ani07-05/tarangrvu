@@ -1,0 +1,3 @@
+# note-taking-app/server/.gitignore
+/node_modules
+node_modules
