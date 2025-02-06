@@ -10,9 +10,13 @@ import jwt from "jsonwebtoken";
 import sqlite3 from "sqlite3";
 import { open } from "sqlite";
 import Groq from "groq-sdk";
+import dotenv from 'dotenv';
 import authRoutes from "./routes/auth.js";
 import notesRouter from "./routes/notes.js";
 import summaryRouter from "./routes/summary.js";
+
+// Load environment variables
+dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -20,10 +24,11 @@ const __dirname = dirname(__filename);
 const app = express();
 const JWT_SECRET = "secretkey"; // Change for production
 
-// Initialize the Groq client with your API key
-const groq = new Groq({ 
-  apiKey: process.env.GROQ_API_KEY 
+// Initialize the Groq client with API key from .env
+const groq = new Groq({
+  apiKey: process.env.GROQ_API_KEY
 });
+
 // Configure multer for handling audio file uploads
 const upload = multer({ 
   dest: "uploads/",
@@ -106,7 +111,6 @@ if (!fs.existsSync(uploadsDir)) {
 // Public routes (no auth required)
 app.use("/api/auth", authRoutes);
 
-// Transcription endpoint (public)
 // Transcription endpoint (public)
 app.post("/api/notes/transcribe", upload.single("audio"), async (req, res) => {
   let inputPath = req.file?.path;
