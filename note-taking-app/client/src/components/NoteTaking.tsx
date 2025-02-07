@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import {
   TextField,
-  Box,
   Paper,
   Button,
   List,
@@ -36,12 +35,12 @@ const NoteTaking: React.FC = () => {
       const response = await axios.get('http://localhost:5000/api/notes', {
         headers: { Authorization: `Bearer ${user?.token}` },
       });
-      setSavedNotes(response.data);
+      setSavedNotes(response.data as any[]);
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error('Error fetching notes:', error.response?.data || error.message);
+      if (error instanceof Error) {
+        console.error('Error fetching notes:', error.message);
       } else {
-        console.error('Error fetching notes:', error);
+        console.error('Error fetching notes:', String(error));
       }
     }
   };
@@ -78,11 +77,8 @@ const NoteTaking: React.FC = () => {
       setEditNoteId(null);
       fetchNotes();
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error('Error saving note:', error.response?.data || error.message);
-      } else {
-        console.error('Error saving note:', error);
-      }
+
+  console.log("Error saving note:", error);
     }
   };
 
@@ -94,11 +90,8 @@ const NoteTaking: React.FC = () => {
       });
       fetchNotes();
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error('Error deleting note:', error.response?.data || error.message);
-      } else {
+       
         console.error('Error deleting note:', error);
-      }
     }
   };
 

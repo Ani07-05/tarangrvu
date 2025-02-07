@@ -10,7 +10,7 @@ import {
   Toolbar, 
   Typography, 
   IconButton,
-  Button 
+   
 } from '@mui/material';
 import { Menu as MenuIcon, Logout as LogoutIcon } from '@mui/icons-material';
 import { Outlet, useNavigate } from 'react-router-dom';
@@ -37,7 +37,7 @@ const Layout: React.FC = () => {
 
   const fetchNotes = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/notes', {
+      const response = await axios.get<Note[]>('http://localhost:5000/api/notes', {
         headers: { Authorization: `Bearer ${user?.token}` }
       });
       setNotes(response.data);
