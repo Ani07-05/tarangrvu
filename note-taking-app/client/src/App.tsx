@@ -1,5 +1,5 @@
 // note-taking-app/client/src/App.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Container, Tabs, Tab, Box } from '@mui/material';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import NoteTaking from './components/NoteTaking';
