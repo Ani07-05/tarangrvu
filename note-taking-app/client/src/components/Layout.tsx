@@ -37,7 +37,7 @@ const Layout: React.FC = () => {
 
   const fetchNotes = async () => {
     try {
-      const response = await axios.get<Note[]>('http://localhost:5000/api/notes', {
+      const response = await axios.get<Note[]>('https://vakyavault.onrender.com/api/notes', {
         headers: { Authorization: `Bearer ${user?.token}` }
       });
       setNotes(response.data);

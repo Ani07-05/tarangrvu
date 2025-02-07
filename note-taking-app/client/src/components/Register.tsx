@@ -31,7 +31,7 @@ const Register: React.FC = () => {
     }
 
     try {
-      await axios.post('http://localhost:5000/api/auth/register', {
+      await axios.post('https://vakyavault.onrender.com/api/auth/register', {
         username,
         password
       });

@@ -31,7 +31,7 @@ const VoiceRecorder: React.FC<VoiceRecorderProps> = ({ onTranscriptionComplete }
       try {
         console.log("🔹 Sending audio file:", audioFile);
 
-        const response = await fetch("http://localhost:5000/api/notes/transcribe", {
+        const response = await fetch("https://vakyavault.onrender.com/api/notes/transcribe", {
           method: "POST",
           body: formData,
         });

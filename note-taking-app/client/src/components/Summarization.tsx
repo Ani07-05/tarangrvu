@@ -50,7 +50,7 @@ const Summarization: React.FC = () => {
 
     try {
       const response = await axios.post<SummaryResponse>(
-        "http://localhost:5000/api/summary/generate",
+        "https://vakyavault.onrender.com/api/summary/generate",
         {
           text,
           targetLength: length,
@@ -79,7 +79,7 @@ const Summarization: React.FC = () => {
 
     try {
       await axios.post(
-        "http://localhost:5000/api/notes",
+        "https://vakyavault.onrender.com/api/notes",
         {
           title,
           content: text,

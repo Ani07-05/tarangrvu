@@ -32,7 +32,7 @@ const NoteTaking: React.FC = () => {
   // Fetch notes from server
   const fetchNotes = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/notes', {
+      const response = await axios.get('https://vakyavault.onrender.com/api/notes', {
         headers: { Authorization: `Bearer ${user?.token}` },
       });
       setSavedNotes(response.data as any[]);
@@ -60,13 +60,13 @@ const NoteTaking: React.FC = () => {
     try {
       if (editNoteId) {
         await axios.put(
-          `http://localhost:5000/api/notes/${editNoteId}`,
+          `https://vakyavault.onrender.com/api/notes/${editNoteId}`,
           { title, content: notes, summary: '', keywords: [], language: 'English' },
           { headers: { Authorization: `Bearer ${user?.token}` } }
         );
       } else {
         await axios.post(
-          'http://localhost:5000/api/notes',
+          'https://vakyavault.onrender.com/api/notes',
           { title, content: notes, summary: '', keywords: [], language: 'English' },
           { headers: { Authorization: `Bearer ${user?.token}` } }
         );
@@ -85,7 +85,7 @@ const NoteTaking: React.FC = () => {
   // Delete note
   const deleteNote = async (id: number) => {
     try {
-      await axios.delete(`http://localhost:5000/api/notes/${id}`, {
+      await axios.delete(`https://vakyavault.onrender.com/api/notes/${id}`, {
         headers: { Authorization: `Bearer ${user?.token}` },
       });
       fetchNotes();
